@@ -6,23 +6,24 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class SocketRunner {
     public static void main(String[] args) throws IOException {
         //        TCP порты
         // http - 80
         // https - 443
-        final InetAddress inetAddress = Inet4Address.getByName("google.com");
-        try (Socket socket = new Socket(inetAddress, 80);
+        final InetAddress inetAddress = Inet4Address.getByName("localhost");
+        try (Socket socket = new Socket(inetAddress, 7777);
              final var outputStream = new DataOutputStream(socket.getOutputStream());
-             final var inputStream = new DataInputStream(socket.getInputStream())) {
+             final var inputStream = new DataInputStream(socket.getInputStream());
+             var scanner = new Scanner(System.in)) {
 
-            outputStream.writeUTF("Hello World!"); // отправка запроса в google
-            final byte[] response = inputStream.readAllBytes(); // чтение ответа
-
-            System.out.println(response.length);
-            System.out.println(new String(response, StandardCharsets.UTF_8));
+            while (scanner.hasNextLine()) {
+                var clientRequest = scanner.nextLine();
+                outputStream.writeUTF(clientRequest); // отправка запроса на наш сервер SocketServerRunner с портом 7777
+                System.out.println("Response from Server: " + inputStream.readUTF());
+            }
         }
     }
 }
