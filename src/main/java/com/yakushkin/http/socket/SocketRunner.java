@@ -18,8 +18,9 @@ public class SocketRunner {
              final var outputStream = new DataOutputStream(socket.getOutputStream());
              final var inputStream = new DataInputStream(socket.getInputStream())) {
 
-            outputStream.writeUTF("Hello World!");
-            final byte[] response = inputStream.readAllBytes();
+            outputStream.writeUTF("Hello World!"); // отправка запроса в google
+            final byte[] response = inputStream.readAllBytes(); // чтение ответа
+
             System.out.println(response.length);
             System.out.println(new String(response, StandardCharsets.UTF_8));
         }
